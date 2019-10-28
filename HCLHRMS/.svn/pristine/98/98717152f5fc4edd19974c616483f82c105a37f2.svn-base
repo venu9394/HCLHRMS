@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+<head>
+
+ <script src="https://apis.google.com/js/client.js"></script>
+
+ <script>
+  function auth() {
+  gapi.auth.authorize({
+    'client_id': 'YOUR_GOOGLE_API_CLIENT_ID',
+    'scope': 'https://www.googleapis.com/auth/cloudprint',
+    'immediate': true
+  });
+
+}
+
+function print() {
+
+   alert(1);
+  var xhr = new XMLHttpRequest();
+  var q = new FormData()
+  q.append('xsrf', gapi.auth.getToken().access_token);
+ // q.append('printerid', 'YOUR_GOOGLE_CLOUD_PRINTER_ID');
+  q.append('jobid', '');
+  q.append('title', 'silentPrintTest');
+  q.append('contentType', 'url');
+  
+    //ITS Form
+   // q.append('content',"ITS Form.pdf");
+  q.append('content',"http://www.pdf995.com/samples/pdf.pdf");
+  q.append('ticket', '{ "version": "1.0", "print": {}}');
+
+  alert(2);
+
+  xhr.open('POST', 'https://www.google.com/cloudprint/submit');
+  xhr.setRequestHeader('Authorization', 'Bearer ' + gapi.auth.getToken().access_token);
+  xhr.onload = function () {
+  
+  alert(3);
+    try {
+      var r = JSON.parse(xhr.responseText);
+      console.log(r.message)
+    } catch (e) {
+      console.log(xhr.responseText)
+    }
+	
+	alert(4);
+  }
+
+  xhr.send(q)
+
+}
+
+window.addEventListener('load', auth);
+
+ </script>
+
+</head>
+
+<body onload="print();">
+  <canvas id="the-canvas" style="border:1px solid black;"/>
+</body>
+
+</html>
